@@ -1,6 +1,7 @@
 module.exports = {
 	HOST:"localhost",
-	USER: "pavel",
+	USER: "isakura313",
+	PORT: 5432, 
 	PASSWORD: "",
-	DB: "new_schema"
+	DB: "todo_04"
 };

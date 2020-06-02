@@ -42,7 +42,7 @@ require("./app/routes/deals.routes.js")(app);
 
 
 app.listen(port, funciton = () =>{
-	console.log("Произошел старт сервера");
+	console.log(`Произошел старт сервера http://localhost:8080`);
 })
 
 

@@ -15,18 +15,57 @@ const deal = new Deal({
 	'inner_key': req.body.inner_key
 })
 
+
+
 //Сохраняем наше дело в базу даннных
+
 Deal.create(deal, (err, data)=>{
-console.log("попытка создания дела")
+console.log(data)
+// console.log(`наша дата сейчас  ${data.rows}`)
 if(err)
 	res.status(500).send({
 		message:
 			err.message || "Произошла ошибка"
 	});
 	else
-		res.send(data)
+		res.send("дело создано")
 	});
+
+
 };
+
+exports.findAll = (req, res) =>{
+Deal.getAll((err, data)=>{
+	console.log("Получение всех дел");
+	if (err){
+		res.status(500).send({
+			message:
+			err.message || "Произошла неизвестная ошибка"
+		});
+		
+	}else res.status(200).send(
+		data.rows
+	)
+});
+}
+
+exports.findOne  = (req, res) =>{
+	Deal.findbyKey(req.params.dealId, (err, data)=>{
+		console.log(`Выведи нам ${data}`)
+		if(err){
+			if(err.kind == "not_found"){
+				res.status(404).send({
+					message: `Нет дела с таким id`
+				});
+			} else{
+				res.status(500).send({
+					message: " ПОчему я должен тебе все объяснять?"
+				})
+			} 
+		}else res.send(data.rows[0])
+	})
+}
+
 
 
 
