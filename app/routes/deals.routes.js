@@ -5,19 +5,8 @@ module.exports = app =>{
 	app.get("/deals", deals.findAll );
 	app.get("/deals/:dealId", deals.findOne)
 	app.post("/deals", deals.create);
-
-	//здесь у нас будут остальные запросы
-
-	//get
-
-
-	// update
-
-
-	//deleteAll - сброс всех дел
-
-
-	//delete
-
+	app.put("/deals/:inner_key", deals.updateOne) // обновляем наши дела по Id
+	app.delete("/deals/:inner_key", deals.delete) // удаляем дела по ключу
+	app.delete("/deals", deals.deleteAll)  //здесь у нас происходит сброс всех дел
 
 }

@@ -24,7 +24,7 @@ Deal.getAll =  result => {
 }
 
 
-Deal.findbyKey = (inner_key, result) => {
+Deal.findbyKey = (inner_key) => {
 	const queryFind = `SELECT * FROM ${Table} WHERE inner_key = ${inner_key}`;
 	pool.query(queryFind, (err, res) =>{
 		if(err){
@@ -54,8 +54,67 @@ Deal.create = (newDeal, result) =>{
 		// result(null )
 		console.log("Создано дело", {id: res.insertId, ...newDeal});
 		// result(null, {id:res.insertId, ...newDeal}) // тутачки у нас ответ от сервера
+	});
+};
+
+Deal.updateById = (inner_key, deal, result) =>{
+	const QueryUpdate = `UPDATE deals SET text = $1 WHERE inner_key = $2`;
+	pool.query(QueryUpdate, [deal.text, inner_key],
+	(err, res) =>{
+		if (err){
+			console.log("error", err)
+			result(err, null)
+			return;
+		}
+		if (res.affectedRows == 0){
+			result({kind: " not_found"}, null);
+			return;
+		}
+
+		console.log("Обновлено дело", {inner_key:inner_key, ...deal})
+		result(null, {inner_key: inner_key, ...deal});
 	})
 }
+
+Deal.remove = (inner_key, result) =>{
+	const queryDelete = ` Delete from deals WHERE inner_key = $1`;
+	pool.query(queryDelete, [inner_key],
+		 (err, res) =>{
+			if (err){
+				console.log("error", err)
+				result(err, null)
+				return;
+			}
+			if (res.affectedRows == 0){
+				result({kind: " not_found"}, null);
+				return;
+			}
+
+			console.log("Удален пользователь с ", inner_key);
+			result(null, res)
+		})
+}
+
+Deal.removeAll = result =>{
+	const queryDeleteAll = `Delete from deals`;
+	pool.query(queryDeleteAll, (err, res)=>{
+		if (err){
+			console.log("error", err)
+			result(err, null)
+			return;
+		}
+		if (res.affectedRows == 0){
+			result({kind: " not_found"}, null);
+			return;
+		}
+			console.log(`Были успешно удалены дела c ${res.affectedRows}`)
+			result(null, res)
+	})
+}
+
+
+
+
 module.exports = Deal;
 
 
